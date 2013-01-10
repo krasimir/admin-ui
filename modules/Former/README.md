@@ -77,7 +77,34 @@ A common case is that we have to show a html form, submit it and collect its dat
         "label" => "Please choose your avatar:"
     ));
 
-Have in mind that you can chain the controls:
+#### Plugins
+
+##### Adding WYSIWYG editor
+Former supports [TinyMCE](http://www.tinymce.com/). To use it you should include the following file into your page:
+
+    <script src="[path to former]/plugins/tinymce/tiny_mce.js" type="text/javascript"></script>
+
+Require the editor:
+    
+    $form->addTinyEditor(array(
+        "name" => "richtext",
+        "label" => "Add more information about you:"
+    ));
+
+##### Adding date picker
+To use it you should include the following files into your page:
+
+    <script src="[path to former]/plugins/datepicker/datepicker.js" type="text/javascript"></script>
+    <link href="[path to former]/plugins/datepicker/datepicker.css" rel="stylesheet" type="text/css" />
+
+Require the picker:
+
+    ->addDatePicker(array(
+        "name" => "date",
+        "label" => "The date:"
+    ));
+
+#### Chaining the controls definition:
 
     $form->addTextBox(array(
         "name" => "username", 
@@ -101,7 +128,11 @@ Have in mind that you can chain the controls:
 
 ## Getting the form's markup or data
 
-    $registerForm = Former::get("register-user", array("description" => "...", "job" => "front-end"));
+    Former::get({name of the form}, {data source - associative array}, {default values});
+
+By default the data source is *$_POST* and the default values is *null*.
+    
+    $registerForm = Former::get("register-user", $_POST, (object) array("description" => "...", "job" => "front-end"));
     if($registerForm->submitted && $registerForm->success) {
         // Form is submitted
         $data = $registerForm->data;
@@ -114,7 +145,7 @@ Have in mind that you can chain the controls:
 
 ## Adding default values:
 
-    $registerForm = Former::get("register-user", (object) array(
+    $registerForm = Former::get("register-user", $_POST, (object) array(
         "description" => "text here ...", 
         "job" => "front-end"
     ));
@@ -154,6 +185,25 @@ Available validators:
     ->Int()
     ->Float()
     ->String()
+    ->custom()
+
+#### Custom validation
+The method *custom* accepts anonymous function, which you can use to implement a custom validation. However the response is strictly defined with properties *status* and *message*. For example:
+
+    ->addDatePicker(array(
+        "name" => "date",
+        "label" => "The date:",
+        "validation" => Former::validation()->NotEmpty()->custom(function($value) {
+            $maxDate = mktime(0, 0, 0, 2, 1, 2013);
+            $value = explode("/", $value);
+            $setDate = mktime(0, 0, 0, $value[1], $value[0], $value[2]);
+            if($maxDate < $setDate) {
+                return (object) array("status" => false, "message" => "The date should be less then 01 February 2013.");
+            } else {
+                return (object) array("status" => true, "message" => "");
+            }
+        })
+    ))
 
 ## Custom html templates
 If you need to change the html markup or just to add new logic copy the content of *tpl* directory in a new place. After that just set the new path like that:

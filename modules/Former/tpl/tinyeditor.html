@@ -1,0 +1,16 @@
+<div class="former-element">
+    {error}
+    <label>{label}</label>
+    <div class="form-element-controls">
+        <textarea name="{name}" id="editor-{name}">{value}</textarea>
+    </div>
+    <br class="clear" />
+</div>
+<script type="text/javascript">
+    tinyMCE.init({
+        mode : "exact",
+        elements : "editor-{name}",
+        theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+        theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor"
+    });
+</script>

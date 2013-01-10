@@ -1,4 +1,6 @@
-admin-ui
-========
+#PHP based micro administration
+- - -
 
-PHP based micro administration
+## Installation
+- download the files
+- change the configuration in *config.php*

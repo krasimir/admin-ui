@@ -1,0 +1,20 @@
+label {
+    cursor: default;
+}
+.clear {
+    clear: both;
+}
+.former-element {
+    border-bottom: dotted 1px #CECECE;
+    padding: 10px 0 10px 0;
+}
+.former-element label {
+    display: block;
+    width: 180px;
+    float: left;
+}
+.former-element .form-element-controls {
+    display: block;
+    width: 300px;
+    float: left;
+}

@@ -20,9 +20,9 @@
             }
             return self::$forms->$key = new FormerForm($url, $method, $key);
         }
-        public static function get($key, $defaultValues = null) {
+        public static function get($key, $dataSource = null, $defaultValues = null) {
             if(isset(self::$forms->$key)) {
-                return self::$forms->$key->update($defaultValues);
+                return self::$forms->$key->update($dataSource, $defaultValues);
             } else {
                 throw new Exception("There is no form associated with key=".$key);
             }
@@ -75,6 +75,14 @@
                         case "Int": $failed = !is_numeric($value); break;
                         case "Float": $failed = !is_numeric($value); break;
                         case "String": $failed = is_numeric($value); break;
+                        case "custom": 
+                            if(is_callable($filter->args[0])) {
+                                $result = $filter->args[0]($value);
+                                if($result->status === false) {
+                                    return $result;
+                                }
+                            }
+                        break;
                     }
                     if($failed) {
                         return (object) array("status" => false, "message" => FormerValidation::${"MESSAGE_".$filter->type});
@@ -91,6 +99,7 @@
         private $method;
         private $key;
         private $defaultValues;
+        private $dataSource;
 
         public $submitted = false;
         public $success = false;
@@ -105,10 +114,12 @@
         }
         public function url($url) {
             $this->url = $url;
-            $this->update($this->defaultValues);
+            $this->update($this->dataSource, $this->defaultValues);
             return $this;
         }
-        public function update($defaultValues = null) {
+        public function update($dataSource = null, $defaultValues = null) {
+
+            $this->dataSource = $dataSource === null ? $_POST : $dataSource;
 
             $elementsMarkup = "";
             $defaultValues = $this->defaultValues = $defaultValues == null ? (object) array() : $defaultValues;
@@ -121,7 +132,7 @@
                 $value = $this->read($el->props["name"]);
                 $defaultValue = isset($defaultValues->{$el->props["name"]}) ? $defaultValues->{$el->props["name"]} : "";
                 $this->data->{$el->props["name"]} = $value;
-                $valid = isset($el->props["validation"]) ? $el->props["validation"]->check($value) : (object) array("status" => true, "message" => "");
+                $valid = isset($el->props["validation"]) && $this->submitted ? $el->props["validation"]->check($value) : (object) array("status" => true, "message" => "");
 
                 $optionsMarkup = '';
                 if($el->type == "dropdown") {
@@ -175,41 +186,16 @@
             ));
             return $this;
         }
-        public function addTextBox($props) {
-            $this->elements []= (object) array("type" => "textbox", "props" => $props);
-            return $this;
-        }
-        public function addTextArea($props) {
-            $this->elements []= (object) array("type" => "textarea", "props" => $props);
-            return $this;
-        }
-        public function addPasswordBox($props) {
-            $this->elements []= (object) array("type" => "passwordbox", "props" => $props);
-            return $this;
-        }
-        public function addDropDown($props) {
-            $this->elements []= (object) array("type" => "dropdown", "props" => $props);
-            return $this;
-        }
-        public function addRadio($props) {
-            $this->elements []= (object) array("type" => "radio", "props" => $props);
-            return $this;
-        }
-        public function addCheck($props) {
-            $this->elements []= (object) array("type" => "check", "props" => $props);
-            return $this;
-        }
-        public function addFile($props) {
-            $this->elements []= (object) array("type" => "file", "props" => $props);
+        public function __call($name, $arguments) {
+            $type = strtolower(str_replace("add", "", $name));
+            $this->elements []= (object) array("type" => $type, "props" => $arguments[0]);
             return $this;
         }
         // request parameters
         private function read($key) {
             $data = null;
-            if(isset($_GET[$key])) {
-                $data = $_GET[$key];
-            } else if(isset($_POST[$key])) {
-                $data = $_POST[$key];
+            if(isset($this->dataSource[$key])) {
+                $data = $this->dataSource[$key];
             }
             if($data !== null) {
                 if(is_array($data)) {

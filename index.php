@@ -38,7 +38,7 @@
     $router = new Router();
     $router
     ->register("/logout", "Logout")
-    ->register("", array("RequireLogin", "Home"))
+    ->register("", array("RequireLogin", "Main"))
     ->run();
 
 ?>
