@@ -5,6 +5,7 @@
         private $resource;
         private $form;
         private $params;
+        private $itemsPerPage = 10;
 
         public function __construct($params) {
 
@@ -32,7 +33,14 @@
         }
         // pages
         private function showList() {
-            $records = $this->mysql->{$this->resource->name}->order("position")->asc()->get();
+
+            $allRecords = $this->mysql->action("SELECT COUNT(*) as num FROM ".$this->resource->name);
+            $allRecords = $allRecords[0]->num;
+            $currentPage = isset($this->params["page"]) ? $this->params["page"] : 0;
+            $from = $currentPage * $this->itemsPerPage;
+            $to = $this->itemsPerPage;          
+
+            $records = $this->mysql->{$this->resource->name}->order("position")->asc()->limit($from.",".$to)->get();
             $recordsMarkup = '';
             $headersMarkup = '';
             $skipColumns = $this->getColumnsForSkipping();
@@ -56,7 +64,7 @@
                             $columnsMarkup .= view("resource/list-item-column.html", array(
                                 "value" => $item->presenter == "File" ? $this->formatFileLink($record->{$item->name}) : $this->formatListText($record->{$item->name})
                             ));
-                        } 
+                        }
                     }
                     $recordsMarkup .= view("resource/list-item-row.html", array(
                         "columns" => $columnsMarkup,
@@ -72,7 +80,8 @@
                 "content" => view("resource/index.html", array(
                     "title" => $this->resource->title,
                     "name" => $this->resource->name,
-                    "records" => $recordsMarkup
+                    "records" => $recordsMarkup,
+                    "pagination" => $this->pagination($currentPage, $allRecords)
                 )),
                 "nav" => view("nav.html")
             )))->send();
@@ -263,6 +272,16 @@
             }
             $str = wordwrap($str, 25, '<br />', true);
             return $str;
+        }
+        private function pagination($currentPage, $allRecords) {
+            $markup = '';
+            for($i=0; $i<ceil($allRecords / $this->itemsPerPage); $i++) {
+                $markup .= view("resource/list-pagination.html", array(
+                    "link" => ADMINUI_URL."resources/".$this->resource->name."?page=".$i,
+                    "label" => $i+1
+                ));
+            }
+            return $markup;
         }
     }
 

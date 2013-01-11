@@ -4,10 +4,12 @@
     <li class="active">{title}</li>
     <li class="pull-right"><a href="{siteURL}resources/{name}/add"><i class="icon-plus"></i> Add new record</a></li>
 </ul>
-<div class="row">
-    <div class="span12">
-        <table class="table table-striped span12">
-            {records}
-        </table>
-    </div>
+<table class="table table-striped">
+    {records}
+</table>
+<hr />
+<div class="pagination">
+    <ul>
+        {pagination}
+    </ul>
 </div>
