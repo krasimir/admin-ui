@@ -14,5 +14,13 @@
             { "path": "src/core/SessionManager" },
             { "path": "src/core/Former" }
         ]
+    },
+    {
+        "owner": "mikecao",
+        "repository": "flight",
+        "branch": "master",
+        "modules": [
+            { "path": "flight/net", "name": "FlightNet" }
+        ]
     }
 ]

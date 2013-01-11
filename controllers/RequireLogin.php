@@ -12,9 +12,10 @@
         "validation" => Former::validation()->NotEmpty()
     ));
 
-    class RequireLogin {
+    class RequireLogin extends Controller {
 
         public function __construct($params) {
+            parent::__construct();
             if(SessionManager::read("admin-ui-user") === false) {
                 global $USERS;
                 $form = Former::get("login-form");
@@ -30,10 +31,10 @@
                         "message" => "Wrong credentials"
                     ));
                 }
-                die(view("layout.html", array(
+                $this->response->write(view("layout.html", array(
                     "content" => $errorMessage.$form->markup,
                     "nav" => "<h3>Please login first.</h3>"
-                )));
+                )))->send();
             }
         }
 

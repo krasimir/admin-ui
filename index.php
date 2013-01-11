@@ -16,7 +16,9 @@
     );
     $F->loadResource(
         "config.php",
-        "controllers/*"
+        "helpers/*",
+        "controllers/*",
+        "modules/FlightNet/Response.php"
     );
 
     // configuration of the template engine and Former
@@ -38,6 +40,7 @@
     $router = new Router();
     $router
     ->register("/logout", "Logout")
+    ->register("/resources/@name", array("RequireLogin", "Resource"))
     ->register("", array("RequireLogin", "Main"))
     ->run();
 
