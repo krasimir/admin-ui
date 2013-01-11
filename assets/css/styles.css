@@ -10,13 +10,17 @@ label {
 .header .nav-holder {
     padding: 20px 0 0 0;
 }
-tr .options {
-    width: 100px;
+.list tr td img {
+    max-width: 50px;
+    max-height: 30px;
 }
-tr .options hr {
+.list tr .options {
+    width: 150px;
+}
+.list tr .options hr {
     margin: 5px 0 5px 0;
 }
-tr .options .delete {
+.list tr .options .delete {
     color: #B0B0B0;
 }
 
