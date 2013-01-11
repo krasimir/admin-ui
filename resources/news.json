@@ -1,4 +1,29 @@
-{    
-    "url": "news",
-    "title": "News"
+{
+    "name": "news",
+    "title": "News",
+    "data": [
+        {
+            "name": "title",
+            "title": "Title",
+            "type": "LONGTEXT",
+            "presenter": "TextBox",
+            "validation": "NotEmpty, LengthMoreThen/5"
+        },
+        {
+            "name": "date",
+            "title": "Date",
+            "type": "VARCHAR(20)",
+            "presenter": "DatePicker",
+            "validation": "NotEmpty"
+        },
+        {
+            "name": "text",
+            "title": "Text",
+            "type": "LONGTEXT",
+            "presenter": "TinyEditor"
+        }
+    ],
+    "listing": {
+        "skip": "text"
+    }
 }

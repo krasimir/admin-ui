@@ -4,6 +4,14 @@ label {
 .clear {
     clear: both;
 }
+.header {
+    padding: 20px 0 0 0;
+}
+.header .nav-holder {
+    padding: 20px 0 0 0;
+}
+
+/************************************************* Former customizations */
 .former-element {
     border-bottom: dotted 1px #CECECE;
     padding: 10px 0 10px 0;
@@ -17,4 +25,10 @@ label {
     display: block;
     width: 300px;
     float: left;
+}
+.former-element .error {
+    padding: 5px 5px 5px 180px;
+    border-radius: 4px;
+    background: #FFBABA;
+    margin: 10px 0 10px 0;
 }

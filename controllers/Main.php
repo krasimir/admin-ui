@@ -4,6 +4,7 @@
         public function __construct() {
             parent::__construct();
             $this->response->write(view("layout.html", array(
+                "pageTitle" => "Administration",
                 "content" => view("home/index.html", array(
                     "resources" => $this->getResourcesMarkup()
                 )),
@@ -16,7 +17,7 @@
             $markup = '';
             foreach($resources as $r) {
                 $markup .= view("home/resources-link.html", array(
-                    "link" => ADMINUI_URL."resources/".$r->content->url,
+                    "link" => ADMINUI_URL."resources/".$r->content->name,
                     "label" => $r->content->title
                 ));
             }

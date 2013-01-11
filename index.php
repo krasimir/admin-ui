@@ -26,7 +26,6 @@
     View::$forEachView = array(
         "siteURL" => ADMINUI_URL
     );
-    Former::templatesPath(__DIR__."/tpl/Former/");
 
     // database
     $mysql = new MySQLAdapter((object) array(
@@ -40,6 +39,9 @@
     $router = new Router();
     $router
     ->register("/logout", "Logout")
+    ->register("/resources/@name/delete/@id", array("RequireLogin", "Resource"))
+    ->register("/resources/@name/edit/@id", array("RequireLogin", "Resource"))
+    ->register("/resources/@name/add", array("RequireLogin", "Resource"))
     ->register("/resources/@name", array("RequireLogin", "Resource"))
     ->register("", array("RequireLogin", "Main"))
     ->run();

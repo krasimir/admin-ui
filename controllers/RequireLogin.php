@@ -32,8 +32,9 @@
                     ));
                 }
                 $this->response->write(view("layout.html", array(
+                    "pageTitle" => "Please login first.",
                     "content" => $errorMessage.$form->markup,
-                    "nav" => "<h3>Please login first.</h3>"
+                    "nav" => ""
                 )))->send();
             }
         }

@@ -32,14 +32,14 @@
             }
             return $this->resources;
         }
-        public function getByURL($url) {
+        public function getByName($name) {
             $resources = $this->get();
             foreach($resources as $r) {
-                if($r->content->url == $url) {
+                if($r->content->name == $name) {
                     return $r;
                 }
             }
-            throw new Exception("Missing resource with url=".$url);die();
+            throw new Exception("Missing resource with name=".$name);die();
         }
     }
 
