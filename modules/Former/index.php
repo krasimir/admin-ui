@@ -20,9 +20,9 @@
             }
             return self::$forms->$key = new FormerForm($url, $method, $key);
         }
-        public static function get($key, $dataSource = null, $defaultValues = null) {
+        public static function get($key) {
             if(isset(self::$forms->$key)) {
-                return self::$forms->$key->update($dataSource, $defaultValues);
+                return self::$forms->$key;
             } else {
                 throw new Exception("There is no form associated with key=".$key);
             }
@@ -164,7 +164,7 @@
 
                 $elementsMarkup .= former_view($el->type.".html", array(
                     "name" => $el->props["name"],
-                    "label" => $el->props["label"],
+                    "label" => isset($el->props["label"]) ? $el->props["label"] : $el->props["name"],
                     "value" => $value == false ? $defaultValue : (!is_array($value) ? $value : ""),
                     "error" => $this->submitted && $valid->status == false ? former_view("error.html", array(
                         "message" => $valid->message

@@ -2,15 +2,45 @@
 
 A common case is that we have to show a html form, submit it and collect its data. Normally there are some validations and also usage of the same form for editing already stored data. There should be some nice way to deal with all those repeatable tasks and follow [DRY](http://en.wikipedia.org/wiki/Don't_repeat_yourself) principle. Actually I didn't find any simple and elegant solution of the problem. So, this module is for that - simply dealing with forms.
 
-## Create a form
+- - -
 
-    // pass a unique name and action url
-    $form = Former::register("register-user", "/examples/former/");
+## Usage
 
-    // you can pass also the request method (default = POST)
+1. [Registering a new form](#1-registering-a-new-form).
+2. [Adding controls](#2-adding-controls).
+3. [Accessing the form](#3-accessing-the-form).
+4. [Getting form's response](#4-getting-forms-response).
+5. [Validation](#5-validation).
+6. [Changing the action url](#6-changing-the-action-url).
+7. [Custom html templates](#7-custom-html-templates).
+8. [CSS styles](#8-css-styles).
+9. [Changing the error messages](#9-changing-the-error-messages).
+
+- - -
+
+### 1. Registering a new form
+
+    $form = Former::register([unique name], [action url], [request method, defaul to POST]);
+
+examples:
+
     $form = Former::register("register-user", "/examples/former/", "GET");
 
-## Adding controls    
+### 2. Adding controls    
+The next thing that you should do is to add controls to the form. I.e. the fields that you want to manage. The following methods are available:
+
+    addTextBox
+    addTextArea
+    addPasswordBox
+    addDropDown
+    addRadio
+    addCheck
+    addFile
+    addHiddenField
+    addTinyEditor
+    addDatePicker
+
+Examples:
 
 #### Text field
 
@@ -77,9 +107,13 @@ A common case is that we have to show a html form, submit it and collect its dat
         "label" => "Please choose your avatar:"
     ));
 
-#### Plugins
+#### Add hidden field
 
-##### Adding WYSIWYG editor
+    $form->addHiddenField(array(
+        "name" => "hiddenID"
+    ));
+
+#### Adding WYSIWYG editor
 Former supports [TinyMCE](http://www.tinymce.com/). To use it you should include the following file into your page:
 
     <script src="[path to former]/plugins/tinymce/tiny_mce.js" type="text/javascript"></script>
@@ -91,7 +125,7 @@ Require the editor:
         "label" => "Add more information about you:"
     ));
 
-##### Adding date picker
+#### Adding date picker
 To use it you should include the following files into your page:
 
     <script src="[path to former]/plugins/datepicker/datepicker.js" type="text/javascript"></script>
@@ -104,7 +138,7 @@ Require the picker:
         "label" => "The date:"
     ));
 
-#### Chaining the controls definition:
+The controls' methods return the same *form* object, so you can use the functional chain pattern:
 
     $form->addTextBox(array(
         "name" => "username", 
@@ -126,36 +160,39 @@ Require the picker:
         "validation" => Former::validation()->NotEmpty()->LengthMoreThen(3)->Int()->LessThen(1450)
     ));
 
-## Getting the form's markup or data
+### 3. Accessing the form
+There is no need to keep the reponse of *Former::register* and pass it around your application.
 
-    Former::get({name of the form}, {data source - associative array}, {default values});
+    $form = Former::get("unique-name-of-your-form");
 
-By default the data source is *$_POST* and the default values is *null*.
+### 4. Getting form's response
+The response of the form could be html markup or the submitted data. Before to try to get some of these things you should populate the form by using the *update* method:
+
+    $form->update([data source - associative array], [default values - an object]);
+
+The data source could be $_POST, $_GET, $_FILES or something else. For example:
+
+    $dataSource = array_merge($_POST, $_FILES);
+    $defaultValues = (object) array("key" => "value");
+    $form->update($dataSource, $defaultValues);
+
+Here is a full example:
     
-    $registerForm = Former::get("register-user", $_POST, (object) array("description" => "...", "job" => "front-end"));
-    if($registerForm->submitted && $registerForm->success) {
+    $dataSource = array_merge($_POST, $_FILES);
+    $defaultValues = (object) array("key" => "value");
+    $form = Former::get("register-user");
+    $form->update($dataSource, $defaultValues);
+    if($form->submitted && $form->success) {
         // Form is submitted
-        $data = $registerForm->data;
+        $data = $form->data;
         var_dump($data);
     } else {
         // The form is still not submitted or it doesn't pass the validations
-        $markup = $registerForm->markup;
+        $markup = $form->markup;
         echo $markup;
     }
 
-## Adding default values:
-
-    $registerForm = Former::get("register-user", $_POST, (object) array(
-        "description" => "text here ...", 
-        "job" => "front-end"
-    ));
-
-## Changing the url
-
-    $registerForm = Former::get("register-user");
-    $registerForm->url("/new/url/here");
-
-## Validation
+### 5. Validation
 The data in every of the controls could be validated. Just pass *validation* property along with the others.
 
     $form->addTextBox(array(
@@ -187,7 +224,6 @@ Available validators:
     ->String()
     ->custom()
 
-#### Custom validation
 The method *custom* accepts anonymous function, which you can use to implement a custom validation. However the response is strictly defined with properties *status* and *message*. For example:
 
     ->addDatePicker(array(
@@ -205,15 +241,20 @@ The method *custom* accepts anonymous function, which you can use to implement a
         })
     ))
 
-## Custom html templates
+### 6. Changing the action url
+
+    $form = Former::get("register-user");
+    $form->url("/new/url/here");
+
+### 7. Custom html templates
 If you need to change the html markup or just to add new logic copy the content of *tpl* directory in a new place. After that just set the new path like that:
 
     Former::templatesPath(__DIR__."/");
 
-## CSS styles
+### 8. CSS styles
 The generated markup require some CSS to look good. It is available in *css* directory.
 
-## Changing the error messages
+### 9. Changing the error messages
 The messages are available here:
 
     FormerValidation::$MESSAGE_NotEmpty = "Missing value.";

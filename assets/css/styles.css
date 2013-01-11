@@ -32,3 +32,6 @@ label {
     background: #FFBABA;
     margin: 10px 0 10px 0;
 }
+.former-element textarea {
+    height: 300px;
+}

@@ -7,7 +7,7 @@
             "title": "Title",
             "type": "LONGTEXT",
             "presenter": "TextBox",
-            "validation": "NotEmpty, LengthMoreThen/5"
+            "validation": "NotEmpty, LengthMoreThen/2"
         },
         {
             "name": "date",
@@ -21,6 +21,12 @@
             "title": "Text",
             "type": "LONGTEXT",
             "presenter": "TinyEditor"
+        },
+        {
+            "name": "picture",
+            "title": "Picture",
+            "type": "LONGTEXT",
+            "presenter": "File"
         }
     ],
     "listing": {
