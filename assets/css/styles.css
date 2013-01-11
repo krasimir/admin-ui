@@ -10,6 +10,15 @@ label {
 .header .nav-holder {
     padding: 20px 0 0 0;
 }
+tr .options {
+    width: 100px;
+}
+tr .options hr {
+    margin: 5px 0 5px 0;
+}
+tr .options .delete {
+    color: #B0B0B0;
+}
 
 /************************************************* Former customizations */
 .former-element {

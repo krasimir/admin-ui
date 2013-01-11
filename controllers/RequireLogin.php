@@ -19,6 +19,7 @@
             if(SessionManager::read("admin-ui-user") === false) {
                 global $USERS;
                 $form = Former::get("login-form");
+                $form->update($_POST);
                 $errorMessage = "";
                 if($form->data->username && $form->data->password) {
                     foreach ($USERS as $user) {
@@ -27,7 +28,7 @@
                             return true;
                         }
                     }
-                    $errorMessage = view("Former/error.html", array(
+                    $errorMessage = view("error.html", array(
                         "message" => "Wrong credentials"
                     ));
                 }

@@ -27,9 +27,15 @@
             "title": "Picture",
             "type": "LONGTEXT",
             "presenter": "File"
+        },
+        {
+            "name": "thumbnail",
+            "title": "Thumbnail",
+            "type": "LONGTEXT",
+            "presenter": "File"
         }
     ],
     "listing": {
-        "skip": "text"
+        "skip": "thumbnail, text"
     }
 }

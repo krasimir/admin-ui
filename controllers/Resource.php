@@ -21,6 +21,10 @@
                $this->edit();
             } else if($matchedRouterRule->pattern == "/resources/@name/delete/@id") {
                 $this->delete();
+            } else if($matchedRouterRule->pattern == "/resources/@name/up/@id") {
+                $this->changePosition("up");
+            } else if($matchedRouterRule->pattern == "/resources/@name/down/@id") {
+                $this->changePosition("down");
             } else {
                 $this->showList();
             }
@@ -28,7 +32,7 @@
         }
         // pages
         private function showList() {
-            $records = $this->mysql->{$this->resource->name}->order("position")->asc()->get();  
+            $records = $this->mysql->{$this->resource->name}->order("position")->asc()->get();
             $recordsMarkup = '';
             $headersMarkup = '';
             $skipColumns = $this->getColumnsForSkipping();
@@ -50,7 +54,7 @@
                     foreach($this->resource->data as $item) {
                         if(!in_array($item->name, $skipColumns) && $item->name != "id" && $item->name != "position") {
                             $columnsMarkup .= view("resource/list-item-column.html", array(
-                                "value" => $item->presenter == "File" ? $this->formatFileLink($record->{$item->name}) : $record->{$item->name}
+                                "value" => $item->presenter == "File" ? $this->formatFileLink($record->{$item->name}) : $this->formatListText($record->{$item->name})
                             ));
                         } 
                     }
@@ -128,6 +132,38 @@
                 )),
                 "nav" => view("nav.html")
             )))->send();
+        }
+        private function changePosition($direction) {
+            $records = $this->mysql->{$this->resource->name}->order("position")->asc()->get();
+            $numOfRecords = count($records);
+            for($i=0; $i<$numOfRecords; $i++) {
+                $record = $records[$i];
+                if($record->id == $this->params["id"]) {
+                    if($direction == "up") {
+                        if($i > 0) {
+                            $tmp = $record->position;
+                            $record->position = $records[$i-1]->position;
+                            $records[$i-1]->position = $tmp;
+                            $this->mysql->{$this->resource->name}->save($records[$i-1]);
+                            $this->mysql->{$this->resource->name}->save($record);
+                            header("Location: ".ADMINUI_URL."resources/".$this->resource->name);
+                            die();
+                        }
+                    } else {
+                        if($i < $numOfRecords-1) {
+                            $tmp = $record->position;
+                            $record->position = $records[$i+1]->position;
+                            $records[$i+1]->position = $tmp;
+                            $this->mysql->{$this->resource->name}->save($records[$i+1]);
+                            $this->mysql->{$this->resource->name}->save($record);
+                            header("Location: ".ADMINUI_URL."resources/".$this->resource->name);
+                            die();
+                        }
+                    }
+                }
+            }
+            header("Location: ".ADMINUI_URL."resources/".$this->resource->name);
+            die();
         }
         // defining database context and resource form
         private function defineContext() {
@@ -219,6 +255,14 @@
                     "link" => ADMINUI_URL.FILES_DIR.$file
                 ));
             }            
+        }
+        private function formatListText($str) {
+            $str = strip_tags($str);
+            if(strlen($str) > 150) {
+                $str = substr($str, 0, 100)."...";
+            }
+            $str = wordwrap($str, 25, '<br />', true);
+            return $str;
         }
     }
 

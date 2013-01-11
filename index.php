@@ -39,6 +39,8 @@
     $router = new Router();
     $router
     ->register("/logout", "Logout")
+    ->register("/resources/@name/up/@id", array("RequireLogin", "Resource"))
+    ->register("/resources/@name/down/@id", array("RequireLogin", "Resource"))
     ->register("/resources/@name/delete/@id", array("RequireLogin", "Resource"))
     ->register("/resources/@name/edit/@id", array("RequireLogin", "Resource"))
     ->register("/resources/@name/add", array("RequireLogin", "Resource"))
