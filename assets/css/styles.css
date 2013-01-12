@@ -23,6 +23,10 @@ label {
 .list tr .options .delete {
     color: #B0B0B0;
 }
+.list-headers {
+    font-weight: bold;
+    text-transform: uppercase;
+}
 
 /************************************************* Former customizations */
 .former-element {

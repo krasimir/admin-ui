@@ -2,7 +2,7 @@
 
     session_start();
 
-    require(__DIR__."/fabrico.php");
+    require(__DIR__."/modules/Autoloader/Autoloader.php");
 
     // modules + resources
     global $F;

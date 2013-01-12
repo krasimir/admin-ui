@@ -1,0 +1,13 @@
+{
+    "name": "news_categories",
+    "title": "News categories",
+    "data": [
+        {
+            "name": "title",
+            "title": "Title",
+            "type": "LONGTEXT",
+            "presenter": "TextBox",
+            "validation": "NotEmpty, LengthMoreThen/2"
+        }
+    ]
+}

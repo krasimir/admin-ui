@@ -41,6 +41,15 @@
             }
             throw new Exception("Missing resource with name=".$name);die();
         }
+        public function getByFilename($file) {
+            $resources = $this->get();
+            foreach($resources as $r) {
+                if($r->file == $file) {
+                    return $r;
+                }
+            }
+            throw new Exception("Missing resource with name=".$name);die();
+        }
     }
 
 ?>

@@ -2,6 +2,7 @@
 
     class Resource extends Controller {
 
+        private $resources;
         private $resource;
         private $form;
         private $params;
@@ -11,10 +12,10 @@
 
             parent::__construct();
             $matchedRouterRule = $params["ROUTER_RULE_MATCH"];
-            $resources = new Resources();
             $this->params = $params;
-            $this->resource = $resources->getByName($params["name"])->content;
-            $this->defineContext();
+            $this->resources = new Resources();
+            $this->resource = $this->resources->getByName($params["name"])->content;
+            $this->defineContext($this->resource);
 
             if($matchedRouterRule->pattern == "/resources/@name/add") {
                 $this->add();
@@ -35,7 +36,11 @@
         private function showList() {
 
             $allRecords = $this->mysql->action("SELECT COUNT(*) as num FROM ".$this->resource->name);
-            $allRecords = $allRecords[0]->num;
+            if($allRecords === false) {
+                $allRecords = 0;
+            } else {
+                $allRecords = $allRecords[0]->num;
+            }
             $currentPage = isset($this->params["page"]) ? $this->params["page"] : 0;
             $from = $currentPage * $this->itemsPerPage;
             $to = $this->itemsPerPage;          
@@ -175,12 +180,12 @@
             die();
         }
         // defining database context and resource form
-        private function defineContext() {
+        private function defineContext($resource) {
             $fields = array();
-            foreach($this->resource->data as $item) {
+            foreach($resource->data as $item) {
                 $fields[$item->name] = $item->type; 
             }
-            $this->mysql->defineContext($this->resource->name, $fields);
+            $this->mysql->defineContext($resource->name, $fields);
         }
         private function defineForm() {
             $editMode = isset($this->params["id"]);
@@ -204,7 +209,8 @@
                 $this->form->{"add".$item->presenter}(array(
                     "name" => $item->name, 
                     "label" => $item->title,
-                    "validation" => $validation
+                    "validation" => $validation,
+                    "options" => $this->getOptions(isset($item->options) ? $item->options : null)
                 ));
                 // We should add a hidden input, which will keep the current value of the file item
                 // Otherwise, after submit an empty value will be writen
@@ -214,6 +220,7 @@
                     )); 
                 }
             }
+            // We should send the id of the record while editing
             if($editMode) {
                 $this->form->addHiddenField(array(
                     "name" => "id"
@@ -282,6 +289,28 @@
                 ));
             }
             return $markup;
+        }
+        private function getOptions($optionsStr) {
+            if($optionsStr != null) {
+                if(is_object($optionsStr)) {
+                    return get_object_vars($optionsStr);
+                } else if(is_string($optionsStr)) {
+                    $options = explode(":", $optionsStr);
+                    $resourceFile = $options[0];
+                    $itemName = $options[1];
+                    $resource = $this->resources->getByFilename($resourceFile)->content;
+                    $this->defineContext($resource);
+                    $records = $this->mysql->{$resource->name}->order("position")->asc()->get();
+                    $resultOptions = array();
+                    foreach($records as $record) {
+                        $resultOptions[$record->id] = $record->{$itemName};
+                    }
+                    return $resultOptions;
+                } else {
+                    return null;
+                }
+            }
+            return $optionsStr;            
         }
     }
 

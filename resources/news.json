@@ -10,6 +10,14 @@
             "validation": "NotEmpty, LengthMoreThen/2"
         },
         {
+            "name": "category",
+            "title": "Category",
+            "type": "VARCHAR(50)",
+            "presenter": "DropDown",
+            "validation": "NotEmpty",
+            "options": "news_categories.json:title"
+        },
+        {
             "name": "date",
             "title": "Date",
             "type": "VARCHAR(20)",

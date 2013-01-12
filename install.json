@@ -7,12 +7,13 @@
         "repository": "fabrico",
         "branch": "master",
         "modules": [
-            { "path": "lib/core/ErrorHandler" },
-            { "path": "lib/core/View" },
-            { "path": "lib/core/Router" },
-            { "path": "lib/core/DBAdapters" },
-            { "path": "lib/core/SessionManager" },
-            { "path": "lib/core/Former" }
+            { "path": "lib/Autoloader" },
+            { "path": "lib/ErrorHandler" },
+            { "path": "lib/View" },
+            { "path": "lib/Router" },
+            { "path": "lib/DBAdapters" },
+            { "path": "lib/SessionManager" },
+            { "path": "lib/Former" }
         ]
     },
     {
