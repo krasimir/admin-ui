@@ -35,6 +35,7 @@
         // pages
         private function showList() {
 
+            // pagination
             $allRecords = $this->mysql->action("SELECT COUNT(*) as num FROM ".$this->resource->name);
             if($allRecords === false) {
                 $allRecords = 0;
@@ -45,6 +46,7 @@
             $from = $currentPage * $this->itemsPerPage;
             $to = $this->itemsPerPage;          
 
+            // getting the records and prepare the html markup
             $records = $this->mysql->{$this->resource->name}->order("position")->asc()->limit($from.",".$to)->get();
             $recordsMarkup = '';
             $headersMarkup = '';
@@ -63,11 +65,28 @@
                 ));
                 // table body
                 foreach($records as $record) {
+                    $this->prepareObjectForEditOrDisplay($record);
                     $columnsMarkup = '';
                     foreach($this->resource->data as $item) {
                         if(!in_array($item->name, $skipColumns) && $item->name != "id" && $item->name != "position") {
+                            $value = $record->{$item->name};
+                            if($item->presenter == "Check" || $item->presenter == "Radio" || $item->presenter == "DropDown") {                                
+                                $options = $this->getOptions($item->options);
+                                if(!is_array($value)) $value = array($value);
+                                $valueStr = '';
+                                $numOfValues = count($value);
+                                for($i=0; $i<$numOfValues; $i++) {
+                                    if(isset($options[$value[$i]])) {
+                                        $valueStr .= $options[$value[$i]];
+                                        if($i < $numOfValues-1) {
+                                            $valueStr .= ", ";
+                                        }
+                                    }
+                                }
+                                $value = $valueStr;
+                            }
                             $columnsMarkup .= view("resource/list-item-column.html", array(
-                                "value" => $item->presenter == "File" ? $this->formatFileLink($record->{$item->name}) : $this->formatListText($record->{$item->name})
+                                "value" => $item->presenter == "File" ? $this->formatFileLink($value) : $this->formatListText($value)
                             ));
                         }
                     }
@@ -97,7 +116,7 @@
             if($this->form->submitted && $this->form->success) {
                 // Form is submitted
                 $data = $this->handleFileUploads($this->form->data);
-                $this->mysql->{$this->resource->name}->save($data);
+                $this->mysql->{$this->resource->name}->save($this->prepareObjectForSave($data));
                 $this->response->write(view("layout.html", array(
                     "pageTitle" => $this->resource->title,
                     "content" => view("resource/add.html", array(
@@ -124,6 +143,7 @@
         private function edit() {
             $record = $this->mysql->{$this->resource->name}->where("id=".$this->params["id"])->get();
             $record = $record[0];
+            $record = $this->prepareObjectForEditOrDisplay($record);
             foreach($this->resource->data as $item) {
                 if($item->presenter == "File") {
                    $record->{$item->name."_hidden"} = $record->{$item->name};
@@ -311,6 +331,23 @@
                 }
             }
             return $optionsStr;            
+        }
+        private function prepareObjectForSave($data) {
+            foreach($data as $key => $value) {
+                if(is_object($value) || is_array($value)) {
+                    $data->$key = serialize($value);
+                }
+            }
+            return $data;
+        }
+        private function prepareObjectForEditOrDisplay($data) {
+            foreach($data as $key => $value) {
+                if (is_serialized($value)) {
+                    $value = unserialize($value);
+                }
+                $data->$key = $value;
+            }
+            return $data;
         }
     }
 

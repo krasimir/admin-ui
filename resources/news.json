@@ -13,9 +13,21 @@
             "name": "category",
             "title": "Category",
             "type": "VARCHAR(50)",
-            "presenter": "DropDown",
+            "presenter": "Check",
             "validation": "NotEmpty",
             "options": "news_categories.json:title"
+        },
+        {
+            "name": "pop",
+            "title": "AAA",
+            "type": "VARCHAR(50)",
+            "presenter": "Radio",
+            "validation": "NotEmpty",
+            "options": {
+                "op1": "do",
+                "op2": "maybe",
+                "op3": "no"
+            }
         },
         {
             "name": "date",
