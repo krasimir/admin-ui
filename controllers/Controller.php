@@ -3,8 +3,8 @@
     use flight\net\Response;
 
     class Controller {
-        protected $response;
-        protected $mysql;
+        public $response;
+        public $mysql;
         public function __construct() {
             global $mysql;
             $this->response = new Response();

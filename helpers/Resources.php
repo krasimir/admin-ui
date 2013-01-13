@@ -2,6 +2,7 @@
 
     class Resources {
         private $resources;
+        private $cache;
         public function get() {
             if(isset($this->resources)) {
                 return $this->resources;
@@ -33,22 +34,32 @@
             return $this->resources;
         }
         public function getByName($name) {
+            if(isset($this->cache->$name)) {
+                return $this->cache->$name;
+            }
             $resources = $this->get();
             foreach($resources as $r) {
                 if($r->content->name == $name) {
+                    if(!$this->cache) $this->cache = (object) array();
+                    $this->cache->$name = $r;
                     return $r;
                 }
             }
             throw new Exception("Missing resource with name=".$name);die();
         }
         public function getByFilename($file) {
+            if(isset($this->cache->$file)) {
+                return $this->cache->$file;
+            }
             $resources = $this->get();
             foreach($resources as $r) {
                 if($r->file == $file) {
+                    if(!$this->cache) $this->cache = (object) array();
+                    $this->cache->$file = $r;
                     return $r;
                 }
             }
-            throw new Exception("Missing resource with name=".$name);die();
+            throw new Exception("Missing resource with filename=".$file);die();
         }
     }
 
