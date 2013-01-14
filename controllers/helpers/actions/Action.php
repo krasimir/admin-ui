@@ -82,8 +82,10 @@
                     $action->defineContext();
                     $records = $this->mysql->{$action->resource->name}->order("position")->asc()->get();
                     $resultOptions = array();
-                    foreach($records as $record) {
-                        $resultOptions[$record->id] = $record->{$itemName};
+                    if($records && count($records) > 0) {
+                        foreach($records as $record) {
+                            $resultOptions[$record->id] = $record->{$itemName};
+                        }
                     }
                     return $resultOptions;
                 } else {
