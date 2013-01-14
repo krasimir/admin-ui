@@ -1,16 +1,15 @@
 #PHP based micro content management system
 - - -
 
-*Admin-UI* is very simple content management system. It's based on [Fabrico](https://github.com/krasimir/fabrico) and doesn't require any database management. All you have to do is to define your content's type and relation.
+*Admin-UI* is very simple content management system. It's based on [Fabrico](https://github.com/krasimir/fabrico) and doesn't require any database management. All you have to do is to define your content objects and relation.
 
 ## Installation
-There is no any special things that you should do before to use *Admin-UI*.
 
 1. Download the files 
 2. Create */config/config.php* file (use */config/example.config.php* as a reference)
 
 ## Usage
-There is only one thing that you should - you should define content that you want to manage. In *Admin-UI* this content are called *resource*. To do this create a *.json* file in *resources* folder. Every resource should have its own *.json* file. For example:
+There is only one thing that you should - you should describe the content that you want to manage. In the context of *Admin-UI* this means to add your resources. To do this create a *.json* file in *resources* folder. Every resource should have its own *.json* file. For example:
 
     {
         "name": "news",
