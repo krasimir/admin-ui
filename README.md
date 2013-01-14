@@ -64,16 +64,17 @@ It's an object with the following syntax:
     - type - valid MySQL data type (for example: VARCHAR(20) or LONGTEXT)
     - presenter - could be one of the following: TextBox, TextArea, PasswordBox, DropDown, Radio, Check, File, HiddenField, TinyEditor, DatePicker
     - options: this property is required if you use DropDown, Radio and Check presenters. You can specify the values directly or use another resource. For example:
+    
 
-    "options": {
-        "op1": "do",
-        "op2": "maybe",
-        "op3": "no"
-    }
+        "options": {
+            "op1": "do",
+            "op2": "maybe",
+            "op3": "no"
+        }
 
     or use another resource ([filename]:[name of a field]):
 
-    "options": "news_categories.json:title"
+        "options": "news_categories.json:title"
 
 
 ## Notes
