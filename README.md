@@ -7,8 +7,7 @@
 There is no any special things that you should do before to use *Admin-UI*.
 
 1. Download the files 
-2. Create */config/config.php* file (use /config/example.config.php) as a reference.
-3. Of course the right settings in *config.php*
+2. Create */config/config.php* file (use */config/example.config.php* as a reference)
 
 ## Usage
 There is only one thing that you should - you should define content that you want to manage. In *Admin-UI* this content are called *resource*. To do this create a *.json* file in *resources* folder. Every resource should have its own *.json* file. For example:
