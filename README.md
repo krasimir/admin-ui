@@ -5,6 +5,7 @@
 
 ## Installation
 There is no any special things that you should do before to use *Admin-UI*.
+
 1. Download the files 
 2. Create */config/config.php* file (use /config/example.config.php) as a reference.
 3. Of course the right settings in *config.php*
