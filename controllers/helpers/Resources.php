@@ -8,11 +8,10 @@
                 return $this->resources;
             }
             $this->resources = array();
-            $resourcesDir = __DIR__."/../../resources/";
-            if ($handle = opendir($resourcesDir)) {
+            if ($handle = opendir(RESOURCE_DIR)) {
                 while (false !== ($entry = readdir($handle))) {
-                    if($entry != "." && $entry != ".." && is_file($resourcesDir.$entry) && strpos($entry, ".json") > 0) {
-                        $content = file_get_contents($resourcesDir.$entry);
+                    if($entry != "." && $entry != ".." && is_file(RESOURCE_DIR.$entry) && strpos($entry, ".json") > 0) {
+                        $content = file_get_contents(RESOURCE_DIR.$entry);
                         try {
                             $content = json_decode($content);
                             if($content === null) {

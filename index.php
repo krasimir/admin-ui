@@ -15,7 +15,7 @@
         "Former"
     );
     $F->loadResource(
-        "config.php",
+        "config/config.php",
         "controllers/*",
         "modules/FlightNet/Response.php"
     );
