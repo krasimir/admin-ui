@@ -23,7 +23,8 @@
                     "content" => view("resource/add.html", array(
                         "title" => $this->resource->title,
                         "name" => $this->resource->name,
-                        "form" => $this->form->markup
+                        "form" => $this->form->markup,
+                        "childs" => $this->getChildResourcesMarkup()
                     )),
                     "nav" => view("nav.html")
                 )))->send();

@@ -1,13 +1,15 @@
 <?php
 
     class Resources {
-        private $resources;
-        private $cache;
-        public function get() {
-            if(isset($this->resources)) {
-                return $this->resources;
+
+        private static $resources;
+        private static $cache;
+
+        public static function get() {
+            if(isset(self::$resources)) {
+                return self::$resources;
             }
-            $this->resources = array();
+            self::$resources = array();
             if ($handle = opendir(RESOURCE_DIR)) {
                 while (false !== ($entry = readdir($handle))) {
                     if($entry != "." && $entry != ".." && is_file(RESOURCE_DIR.$entry) && strpos($entry, ".json") > 0) {
@@ -17,7 +19,7 @@
                             if($content === null) {
                                 throw new Exception("Wrong json format in ".$entry);
                             } else {
-                                $this->resources []= (object) array(
+                                self::$resources []= (object) array(
                                     "file" => $entry,
                                     "content" => $content
                                 );
@@ -30,31 +32,31 @@
                 }
                 closedir($handle);
             }
-            return $this->resources;
+            return self::$resources;
         }
-        public function getByName($name) {
-            if(isset($this->cache->$name)) {
-                return $this->cache->$name;
+        public static function getByName($name) {
+            if(isset(self::$cache->$name)) {
+                return self::$cache->$name;
             }
-            $resources = $this->get();
+            $resources = self::get();
             foreach($resources as $r) {
                 if($r->content->name == $name) {
-                    if(!$this->cache) $this->cache = (object) array();
-                    $this->cache->$name = $r;
+                    if(!self::$cache) self::$cache = (object) array();
+                    self::$cache->$name = $r;
                     return $r;
                 }
             }
             throw new Exception("Missing resource with name=".$name);die();
         }
-        public function getByFilename($file) {
-            if(isset($this->cache->$file)) {
-                return $this->cache->$file;
+        public static function getByFilename($file) {
+            if(isset(self::$cache->$file)) {
+                return self::$cache->$file;
             }
-            $resources = $this->get();
+            $resources = self::get();
             foreach($resources as $r) {
                 if($r->file == $file) {
-                    if(!$this->cache) $this->cache = (object) array();
-                    $this->cache->$file = $r;
+                    if(!self::$cache) self::$cache = (object) array();
+                    self::$cache->$file = $r;
                     return $r;
                 }
             }

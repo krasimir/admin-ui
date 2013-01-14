@@ -12,14 +12,15 @@
             )))->send();
         }
         private function getResourcesMarkup() {
-            $resources = new Resources();
-            $resources = $resources->get();
+            $resources = Resources::get();
             $markup = '';
             foreach($resources as $r) {
-                $markup .= view("home/resources-link.html", array(
-                    "link" => ADMINUI_URL."resources/".$r->content->name,
-                    "label" => $r->content->title
-                ));
+                if(!isset($r->content->parent)) {
+                    $markup .= view("home/resources-link.html", array(
+                        "link" => ADMINUI_URL."resources/".$r->content->name,
+                        "label" => $r->content->title
+                    ));
+                }
             }
             return $markup;
         }

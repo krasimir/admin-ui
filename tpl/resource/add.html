@@ -1,9 +1,20 @@
-<ul class="breadcrumb">
-    <li><span class="divider"><i class="icon-hand-right"></i></span></li>
-    <li><a href="/">Home</a> <span class="divider">/</span></li>
-    <li><a href="/resources/{name}">{title}</a> <span class="divider">/</span></li>
-    <li class="active">Add new record</li>
-</ul>
+<div class="row">
+    <div class="span9">
+        <ul class="breadcrumb">
+            <li><span class="divider"><i class="icon-hand-right"></i></span></li>
+            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li><a href="/resources/{name}">{title}</a> <span class="divider">/</span></li>
+            <li class="active">Add new record</li>
+        </ul>
+    </div>
+    <div class="span3">
+        <ul class="nav nav-tabs nav-stacked">
+            {childs}
+        </ul>
+    </div>
+</div>
+<hr />
+
 <div class="row">
     <div class="span12">
         {form}

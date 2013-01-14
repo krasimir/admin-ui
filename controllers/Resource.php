@@ -10,9 +10,8 @@
         public function __construct($params) {
 
             parent::__construct();
-            $this->matchedRouterRule = $params["ROUTER_RULE_MATCH"];            
-            $this->resources = new Resources();
-            $this->resource = $this->resources->getByName(isset($params["name"]) ? $params["name"] : false)->content;
+            $this->matchedRouterRule = $params["ROUTER_RULE_MATCH"];
+            $this->resource = Resources::getByName(isset($params["name"]) ? $params["name"] : false)->content;
 
             switch($this->matchedRouterRule->pattern) {
                 case "/resources/@name":

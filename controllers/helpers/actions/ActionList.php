@@ -71,7 +71,9 @@
                     "title" => $this->resource->title,
                     "name" => $this->resource->name,
                     "records" => $recordsMarkup,
-                    "pagination" => $this->pagination->markup
+                    "pagination" => $this->pagination->markup,
+                    "childs" => $this->getChildResourcesMarkup(),
+                    "totalRecords" => $this->pagination->total
                 )),
                 "nav" => view("nav.html")
             )))->send();

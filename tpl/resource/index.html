@@ -1,9 +1,20 @@
-<ul class="breadcrumb">
-    <li><span class="divider"><i class="icon-hand-right"></i></span></li>
-    <li><a href="/">Home</a> <span class="divider">/</span></li>
-    <li class="active">{title}</li>
-    <li class="pull-right"><a href="{siteURL}resources/{name}/add"><i class="icon-plus"></i> Add new record</a></li>
-</ul>
+<div class="row">
+    <div class="span9">
+        <ul class="breadcrumb">
+            <li><span class="divider"><i class="icon-hand-right"></i></span></li>
+            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li class="active">{title}</li>
+            <li class="pull-right"><small>Total records: {totalRecords}</small></li>
+        </ul>
+    </div>
+    <div class="span3">
+        <ul class="nav nav-tabs nav-stacked">
+            <li><a href="{siteURL}resources/{name}/add"><i class="icon-plus"></i> Add new record</a></li>
+            {childs}
+        </ul>
+    </div>
+</div>
+
 <table class="table table-striped list">
     {records}
 </table>

@@ -76,8 +76,7 @@
                     $options = explode(":", $optionsStr);
                     $resourceFile = $options[0];
                     $itemName = $options[1];
-                    $resources = new Resources();
-                    $resource = $resources->getByFilename($resourceFile)->content;
+                    $resource = Resources::getByFilename($resourceFile)->content;
                     $action = new Action($resource);
                     $action->defineContext();
                     $records = $this->mysql->{$action->resource->name}->order("position")->asc()->get();
@@ -126,6 +125,20 @@
                 }
             }
             return $data;
+        }
+        protected function getChildResourcesMarkup() {
+            $resources = Resources::get();
+            $current = Resources::getByName($this->resource->name);
+            $markup = '';
+            foreach($resources as $r) {
+                if(isset($r->content->parent) && $r->content->parent == $current->file) {
+                    $markup .= view("resource/child-resource.html", array(
+                        "url" => ADMINUI_URL."resources/".$r->content->name,
+                        "title" => $r->content->title
+                    ));
+                }
+            }
+            return $markup;
         }
     }
 
