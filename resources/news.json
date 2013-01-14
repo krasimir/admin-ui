@@ -6,14 +6,16 @@
             "name": "title",
             "title": "Title",
             "type": "LONGTEXT",
-            "presenter": "TextBox"
+            "presenter": "TextBox",
+            "validation": "NotEmpty, Int, LengthMoreThen/4"
         },
         {
             "name": "category",
             "title": "Category",
             "type": "VARCHAR(50)",
             "presenter": "Check",
-            "options": "news_categories.json:title"
+            "options": "news_categories.json:title",
+            "validation": "NotEmpty"
         },
         {
             "name": "pop",

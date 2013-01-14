@@ -77,6 +77,12 @@ It's an object with the following syntax:
 
             "options": "news_categories.json:title"
 
+    - validation /optional/ - there are several validators available: NotEmpty, LengthMoreThen, LengthLessThen, ValidEmail, Match, Not, MoreThen, LessThen, Int, Float, String. Separate the validators with commas. For example:
+
+        "validation": "NotEmpty, Int, LengthMoreThen/4"
+
+    The field requires to contain any value, to be an integer and to have four symbols. As you may guess, some of the validators require variable to be sent. You can do that by using */* as it is done in the example above.
+
 
 ## Notes
 - *files* directory should be writiable
