@@ -87,6 +87,13 @@ It's an object with the following syntax:
 
     The user should type something that is an integer and to have four symbols. As you may guess, some of the validators require parameter to be sent. You can do that by using */* as it is done in the example above.
 - listing /optional/ - it's an object with property *skip*, where you can specify the fields, which should be hidden in the list view
+
+    For example
+
+    "listing": {
+        "skip": "thumbnail, text"
+    }
+
 - parent /optional/ - you are able to create resource, which has children. In other words if some of your resources has to be nested for some of the others you should define *parent*. For example:
 
     "parent": "news.json"
