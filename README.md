@@ -63,8 +63,8 @@ It's an object with the following syntax:
 - data /required/ - an array of objects. Every object represent a column in the database's table
     - name /required/ - the name of the field/column
     - title /required/ - it will be displayed  to the user
-    - type - valid MySQL data type (for example: VARCHAR(20) or LONGTEXT)
-    - presenter - could be one of the following: TextBox, TextArea, PasswordBox, DropDown, Radio, Check, File, HiddenField, TinyEditor, DatePicker
+    - type /required/ - valid MySQL data type (for example: VARCHAR(20) or LONGTEXT)
+    - presenter /required/ - could be one of the following: TextBox, TextArea, PasswordBox, DropDown, Radio, Check, File, HiddenField, TinyEditor, DatePicker
     - options: this property is required if you use DropDown, Radio and Check presenters. You can specify the values directly or use another resource. 
 
         For example:
