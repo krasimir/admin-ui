@@ -6,6 +6,8 @@
         public $response;
         public $mysql;
         public $resource;
+        public $id;
+        protected $form;
         public function __construct($resource = null) {
             global $mysql;
             $this->response = new Response();
@@ -19,28 +21,18 @@
             }
             $this->mysql->defineContext($this->resource->name, $fields);
         }
-        public function defineForm($editMode = false) {
-            $this->form = Former::register("resource-".$this->resource->name, ADMINUI_URL."resources/".$this->resource->name."/add");
+        public function defineForm() {
+            if(isset($this->id)) {
+                $this->form = Former::register("resource-".$this->resource->name, ADMINUI_URL."resources/".$this->resource->name."/edit/".$this->id);
+            } else {
+                $this->form = Former::register("resource-".$this->resource->name, ADMINUI_URL."resources/".$this->resource->name."/add");
+            }
             $fields = array();
-            foreach($this->resource->data as $item) {
-                $validation = null;
-                if(isset($item->validation)) {
-                    $validation = Former::validation();
-                    $validationStr = str_replace(" ", "", $item->validation);
-                    $validationParts = explode(",", $validationStr);
-                    foreach($validationParts as $validationMethod) {
-                        $validationMethod = explode("/", $validationMethod);
-                        if(count($validationMethod) == 2) {
-                            $validation->{$validationMethod[0]}($validationMethod[1]);
-                        } else {
-                            $validation->{$validationMethod[0]}();
-                        }
-                    }
-                }
+            foreach($this->resource->data as $item) {                
                 $this->form->{"add".$item->presenter}(array(
                     "name" => $item->name, 
                     "label" => $item->title,
-                    "validation" => $validation,
+                    "validation" => $this->getValidations($item),
                     "options" => $this->getOptions(isset($item->options) ? $item->options : null)
                 ));
                 // We should add a hidden input, which will keep the current value of the file item
@@ -52,7 +44,7 @@
                 }
             }
             // We should send the id of the record while editing
-            if($editMode) {
+            if(isset($this->id)) {
                 $this->form->addHiddenField(array(
                     "name" => "id"
                 ));
@@ -62,8 +54,8 @@
             foreach ($data as $key => $value) {
                 if(is_array($value) && isset($value["name"]) && $value["name"] != "") {
                     $dir = uniqid();
-                    mkdir(__DIR__."/../../".FILES_DIR.$dir);
-                    if(move_uploaded_file($value["tmp_name"], __DIR__."/../../".FILES_DIR.$dir."/".$value["name"])) {
+                    mkdir(__DIR__."/../../../".FILES_DIR.$dir);
+                    if(move_uploaded_file($value["tmp_name"], __DIR__."/../../../".FILES_DIR.$dir."/".$value["name"])) {
                         $data->$key = $dir."/".$value["name"];
                     } else {
                         throw new Exception("Can't upload file.");
@@ -72,14 +64,6 @@
                 } else if(is_array($value) && isset($value["name"]) && $value["name"] == "") {
                     $data->$key = $data->{$key."_hidden"};
                     unset($data->{$key."_hidden"});
-                }
-            }
-            return $data;
-        }
-        protected function prepareObjectForSave($data) {
-            foreach($data as $key => $value) {
-                if(is_object($value) || is_array($value)) {
-                    // $data->$key = serialize($value);
                 }
             }
             return $data;
@@ -108,23 +92,38 @@
             }
             return $optionsStr;            
         }
-        protected function formatFileLink($file) {
-            $info = pathinfo($file);
-            if(!isset($info["extension"])) {
-                return "";
+        protected function getValidations($item) {
+            $validation = null;
+            if(isset($item->validation)) {
+                $validation = Former::validation();
+                $validationStr = str_replace(" ", "", $item->validation);
+                $validationParts = explode(",", $validationStr);
+                foreach($validationParts as $validationMethod) {
+                    $validationMethod = explode("/", $validationMethod);
+                    if(count($validationMethod) == 2) {
+                        $validation->{$validationMethod[0]}($validationMethod[1]);
+                    } else {
+                        $validation->{$validationMethod[0]}();
+                    }
+                }
             }
-            $ext = strtolower($info["extension"]);
-            if(in_array($ext, array("jpg", "jpeg", "png", "gif", "bmp"))) {
-                return view("resource/list-link-with-image.html", array(
-                    "src" => ADMINUI_URL.FILES_DIR.$file,
-                    "link" => ADMINUI_URL.FILES_DIR.$file
-                ));
-            } else {
-                return view("resource/list-link.html", array(
-                    "label" => $info["basename"],
-                    "link" => ADMINUI_URL.FILES_DIR.$file
-                ));
-            }            
+            return $validation;
+        }
+        protected function formatData($data) {
+            foreach($data as $key => $value) {
+                if(is_array($value)) {
+                    $str = '';
+                    $numOfItems = count($value);
+                    for($i=0; $i<$numOfItems; $i++) {
+                        $str .= $value[$i];
+                        if($i<$numOfItems-1) {
+                            $str .= ',';
+                        }
+                    }
+                    $data->$key = $str;
+                }
+            }
+            return $data;
         }
     }
 

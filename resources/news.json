@@ -6,15 +6,13 @@
             "name": "title",
             "title": "Title",
             "type": "LONGTEXT",
-            "presenter": "TextBox",
-            "validation": "NotEmpty, LengthMoreThen/2"
+            "presenter": "TextBox"
         },
         {
             "name": "category",
             "title": "Category",
             "type": "VARCHAR(50)",
             "presenter": "Check",
-            "validation": "NotEmpty",
             "options": "news_categories.json:title"
         },
         {
@@ -22,7 +20,6 @@
             "title": "AAA",
             "type": "VARCHAR(50)",
             "presenter": "Radio",
-            "validation": "NotEmpty",
             "options": {
                 "op1": "do",
                 "op2": "maybe",
@@ -33,8 +30,7 @@
             "name": "date",
             "title": "Date",
             "type": "VARCHAR(20)",
-            "presenter": "DatePicker",
-            "validation": "NotEmpty"
+            "presenter": "DatePicker"
         },
         {
             "name": "text",

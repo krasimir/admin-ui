@@ -16,7 +16,6 @@
     );
     $F->loadResource(
         "config.php",
-        "helpers/*",
         "controllers/*",
         "modules/FlightNet/Response.php"
     );

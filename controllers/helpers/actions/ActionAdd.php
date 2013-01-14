@@ -8,23 +8,15 @@
             $this->defineForm();
             $this->run();
         }
-        public function run() {
-            $this->form->update(array_merge($_POST, $_FILES));
+        public function run($default = null) {
+            $this->form->update(array_merge($_POST, $_FILES), $default);
             if($this->form->submitted && $this->form->success) {
                 // Form is submitted
                 $data = $this->handleFileUploads($this->form->data);
-                $this->mysql->{$this->resource->name}->save($this->prepareObjectForSave($data));
-                $this->response->write(view("layout.html", array(
-                    "pageTitle" => $this->resource->title,
-                    "content" => view("resource/add.html", array(
-                        "title" => $this->resource->title,
-                        "name" => $this->resource->name,
-                        "form" => view("resource/success.html", array(
-                            "message" => "The record is added successfully. <a href='".ADMINUI_URL."resources/".$this->resource->name."'>Back</a>."
-                        ))
-                    )),
-                    "nav" => view("nav.html")
-                )))->send();
+                $data = $this->formatData($data);
+                $this->mysql->{$this->resource->name}->save($data);
+                header("Location: ".ADMINUI_URL."resources/".$this->resource->name);
+                die();
             } else {
                 $this->response->write(view("layout.html", array(
                     "pageTitle" => $this->resource->title,

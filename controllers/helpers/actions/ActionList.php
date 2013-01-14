@@ -36,9 +36,9 @@
                     foreach($this->resource->data as $item) {
                         if(!in_array($item->name, $skipColumns) && $item->name != "id" && $item->name != "position") {
                             $value = $record->{$item->name};
-                            if($item->presenter == "Check" || $item->presenter == "Radio" || $item->presenter == "DropDown") {                                
+                            if($item->presenter == "Check") {                                
                                 $options = $this->getOptions($item->options);
-                                if(!is_array($value)) $value = array($value);
+                                $value = explode(",", $value);
                                 $valueStr = '';
                                 $numOfValues = count($value);
                                 for($i=0; $i<$numOfValues; $i++) {
@@ -98,7 +98,7 @@
                 ));
             }
         }
-        private function getColumnsForSkipping() {
+        protected function getColumnsForSkipping() {
             if(isset($this->resource->listing) && $this->resource->listing->skip) {
                 $skipColumns = explode(",", str_replace(" ", "", $this->resource->listing->skip));
                 return $skipColumns;
@@ -106,13 +106,31 @@
                 return array();
             }
         }
-        private function formatListText($str) {
+        protected function formatListText($str) {
             $str = strip_tags($str);
             if(strlen($str) > 150) {
                 $str = substr($str, 0, 100)."...";
             }
             $str = wordwrap($str, 25, '<br />', true);
             return $str;
+        }
+        protected function formatFileLink($file) {
+            $info = pathinfo($file);
+            if(!isset($info["extension"])) {
+                return "";
+            }
+            $ext = strtolower($info["extension"]);
+            if(in_array($ext, array("jpg", "jpeg", "png", "gif", "bmp"))) {
+                return view("resource/list-link-with-image.html", array(
+                    "src" => ADMINUI_URL.FILES_DIR.$file,
+                    "link" => ADMINUI_URL.FILES_DIR.$file
+                ));
+            } else {
+                return view("resource/list-link.html", array(
+                    "label" => $info["basename"],
+                    "link" => ADMINUI_URL.FILES_DIR.$file
+                ));
+            }            
         }
     }
 

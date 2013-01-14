@@ -8,7 +8,7 @@
                 return $this->resources;
             }
             $this->resources = array();
-            $resourcesDir = __DIR__."/../resources/";
+            $resourcesDir = __DIR__."/../../resources/";
             if ($handle = opendir($resourcesDir)) {
                 while (false !== ($entry = readdir($handle))) {
                     if($entry != "." && $entry != ".." && is_file($resourcesDir.$entry) && strpos($entry, ".json") > 0) {
