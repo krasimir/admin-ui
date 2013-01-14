@@ -90,13 +90,15 @@ It's an object with the following syntax:
 
     For example
 
-    "listing": {
-        "skip": "thumbnail, text"
-    }
+        "listing": {
+            "skip": "thumbnail, text"
+        }
 
-- parent /optional/ - you are able to create resource, which has children. In other words if some of your resources has to be nested for some of the others you should define *parent*. For example:
+- parent /optional/ - you are able to create resource, which has children. In other words if some of your resources has to be nested for some of the others you should define *parent*. 
 
-    "parent": "news.json"
+    For example:
+
+        "parent": "news.json"
 
 Your nested resources will not be visible in the landing page, but will appear as buttons in the parent resource list page.
 
