@@ -1,4 +1,4 @@
-#PHP based micro administration
+#PHP based micro content management system
 - - -
 
 *Admin-UI* is very simple content management system. It's based on [Fabrico](https://github.com/krasimir/fabrico).
