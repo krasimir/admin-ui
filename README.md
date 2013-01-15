@@ -9,7 +9,7 @@
 2. Create */config/config.php* file (use */config/example.config.php* as a reference)
 
 ## Usage
-There is only one thing that you should - you should describe the content that you want to manage. In the context of *Admin-UI* this means to add your resources. To do this create a *.json* file in *resources* folder. Every resource should have its own *.json* file. For example:
+There is only one thing that you should do - describe your content. In the context of *Admin-UI* this means to add your resources. To do this create a *.json* file in *resources* folder. Every resource should have its own *.json* file. For example:
 
     {
         "name": "news",
