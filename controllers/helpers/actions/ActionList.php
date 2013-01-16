@@ -81,7 +81,7 @@
         }
         protected function initPagination() {
             $allRecords = $this->mysql->action("SELECT COUNT(*) as num FROM ".$this->resource->name);
-            if($allRecords === false) {
+            if(count($allRecords) === 0) {
                 $allRecords = 0;
             } else {
                 $allRecords = $allRecords[0]->num;
