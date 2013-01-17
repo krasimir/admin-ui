@@ -103,7 +103,7 @@ It's an object with the following syntax:
 Your nested resources will not be visible in the landing page, but will appear as buttons in the parent resource list page.
 
 ## Manage images
-There is a *Image* presenter, which deals with uploading pictures. *Admin-ui* gives you ability to control not only the uploaded file, but also to generate different sizes based on the original. Just change the settngs in your *config.php* file:
+There is *Image* presenter, which deals with uploading pictures. *Admin-ui* gives you ability to control not only the uploaded file, but also to generate different sizes based on the original. Just change the settngs in your *config.php* file:
 
     global $IMAGE_SIZES;
     $IMAGE_SIZES = array(
