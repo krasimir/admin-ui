@@ -64,7 +64,7 @@ It's an object with the following syntax:
     - name /required/ - the name of the field/column
     - title /required/ - it will be displayed  to the user
     - type /required/ - valid MySQL data type (for example: VARCHAR(20) or LONGTEXT)
-    - presenter /required/ - could be one of the following: TextBox, TextArea, PasswordBox, DropDown, Radio, Check, File, HiddenField, TinyEditor, DatePicker
+    - presenter /required/ - could be one of the following: TextBox, TextArea, PasswordBox, DropDown, Radio, Check, File, Image, HiddenField, TinyEditor, DatePicker
     - options: this property is required if you use DropDown, Radio and Check presenters. You can specify the values directly or use another resource. 
 
         For example:
@@ -101,7 +101,6 @@ It's an object with the following syntax:
         "parent": "news.json"
 
 Your nested resources will not be visible in the landing page, but will appear as buttons in the parent resource list page.
-
 
 ## Notes
 - *files* directory should be writiable
