@@ -37,7 +37,7 @@
                 ));
                 // We should add a hidden input, which will keep the current value of the file item
                 // Otherwise, after submit an empty value will be writen
-                if($item->presenter == "File") {
+                if($item->presenter == "File" || $item->presenter == "Image") {
                    $this->form->addHiddenField(array(
                         "name" => $item->name."_hidden"
                     )); 
@@ -54,8 +54,27 @@
             foreach ($data as $key => $value) {
                 if(is_array($value) && isset($value["name"]) && $value["name"] != "") {
                     $dir = uniqid();
-                    mkdir(__DIR__."/../../../".FILES_DIR.$dir);
-                    if(move_uploaded_file($value["tmp_name"], __DIR__."/../../../".FILES_DIR.$dir."/".$value["name"])) {
+                    $outputDir = __DIR__."/../../../".FILES_DIR.$dir."/";
+                    mkdir($outputDir);
+                    if(move_uploaded_file($value["tmp_name"], $outputDir.$value["name"])) {
+                        if($this->getResourceItemByName($key)->presenter == "Image") {   
+                            global $IMAGE_SIZES;
+                            $IMAGE_SIZES = array_merge($IMAGE_SIZES, array((object) array("prefix" => "list_", "height" => 30)));
+                            foreach($IMAGE_SIZES as $size) {
+                                $image = new SimpleImage();
+                                $image->load($outputDir.$value["name"]);
+                                if(isset($size->width) && isset($size->height)) {
+                                    $image->resize($size->width, $size->height);
+                                } else if(isset($size->width)) {
+                                    $image->resizeToWidth($size->width);
+                                } else if(isset($size->height)) {
+                                    $image->resizeToHeight($size->height);
+                                } else if(isset($size->scale)) {
+                                    $image->scale($size->scale);
+                                }
+                                $image->save($outputDir.$size->prefix.$value["name"]);
+                            }
+                        }
                         $data->$key = $dir."/".$value["name"];
                     } else {
                         throw new Exception("Can't upload file.");
@@ -139,6 +158,14 @@
                 }
             }
             return $markup;
+        }
+        protected function getResourceItemByName($name) {
+            foreach($this->resource->data as $item) {
+                if($item->name == $name) {
+                    return $item;
+                }
+            }
+            return null;
         }
     }
 

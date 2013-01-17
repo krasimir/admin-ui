@@ -23,7 +23,7 @@
                 foreach($this->resource->data as $item) {
                     if(!in_array($item->name, $skipColumns)) {
                         $headersMarkup .= view("resource/list-item-column.html", array(
-                            "value" => $item->name
+                            "value" => $item->title
                         ));
                     }
                 }
@@ -51,9 +51,19 @@
                                 }
                                 $value = $valueStr;
                             }
-                            $columnsMarkup .= view("resource/list-item-column.html", array(
-                                "value" => $item->presenter == "File" ? $this->formatFileLink($value) : $this->formatListText($value)
-                            ));
+                            if($item->presenter == "File") {
+                                $columnsMarkup .= view("resource/list-item-column.html", array(
+                                    "value" => $this->formatFileLink($value)
+                                ));
+                            } else if($item->presenter == "Image") {
+                                $columnsMarkup .= view("resource/list-item-column.html", array(
+                                    "value" => $this->formatImageLink($value)
+                                ));
+                            } else {
+                                $columnsMarkup .= view("resource/list-item-column.html", array(
+                                    "value" => $this->formatListText($value)
+                                ));
+                            }
                         }
                     }
                     $recordsMarkup .= view("resource/list-item-row.html", array(
@@ -116,7 +126,7 @@
             $str = wordwrap($str, 25, '<br />', true);
             return $str;
         }
-        protected function formatFileLink($file) {
+        protected function formatImageLink($file) {
             $info = pathinfo($file);
             if(!isset($info["extension"])) {
                 return "";
@@ -124,7 +134,7 @@
             $ext = strtolower($info["extension"]);
             if(in_array($ext, array("jpg", "jpeg", "png", "gif", "bmp"))) {
                 return view("resource/list-link-with-image.html", array(
-                    "src" => ADMINUI_URL.FILES_DIR.$file,
+                    "src" => ADMINUI_URL.FILES_DIR.dirname($file)."/list_".basename($file),
                     "link" => ADMINUI_URL.FILES_DIR.$file
                 ));
             } else {
@@ -132,7 +142,13 @@
                     "label" => $info["basename"],
                     "link" => ADMINUI_URL.FILES_DIR.$file
                 ));
-            }            
+            }   
+        }
+        protected function formatFileLink($file) {
+            return view("resource/list-link.html", array(
+                "label" => basename($file),
+                "link" => ADMINUI_URL.FILES_DIR.$file
+            ));           
         }
     }
 

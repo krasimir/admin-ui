@@ -19,9 +19,12 @@
                 private $gitHubPassword = false;
                 private $gitHubRateLimit = false;
 
+                private $updateMode = false;
+
                 public function __construct() {
                     $this->modulesDir = FABRICO_MODULES_DIR;
                     $this->validatePackageJSON();
+                    $this->checkForUpdateMode();
                     $this->log("\nFabrico Package Manager started\n", "GREEN");
                     $this->gitRepos = (object) array();
                     $this->installedModules = (object) array();
@@ -98,20 +101,27 @@
                         $module->ignoreIfAvailable = true;
                     }
 
-                    if($module->ignoreIfAvailable && file_exists($installInDir."/".$module->name)) {
+                    if($module->ignoreIfAvailable && file_exists($installInDir."/".$module->name) && $this->updateMode === false) {
                         $this->log("/".$module->name." already installed", "", $indent + 1);
                         $this->actionsAfter($module, $installInDir."/".$module->name, $indent);
                         return;
                     }
 
-                    if(file_exists($installInDir."/".$module->name)) {
-                        $this->rmdir_recursive($installInDir."/".$module->name);
-                    }
-                    if(mkdir($installInDir."/".$module->name, 0777)) {
-                        $this->log("/".$module->name, "", $indent + 1);
+                    // The deletion of a module is commented, because of the update feature
+                    // if(file_exists($installInDir."/".$module->name)) {
+                    //     $this->rmdir_recursive($installInDir."/".$module->name);
+                    // }
+
+                    if(!file_exists($installInDir."/".$module->name)) {
+                        if(mkdir($installInDir."/".$module->name, 0777)) {
+                            $this->log("/".$module->name, "", $indent + 1);
+                        } else {
+                            $this->error("/".$module->name." directory is not created", "", $indent + 1);
+                        }
                     } else {
-                        $this->error("/".$module->name." directory is no created", "", $indent + 1);
+                        $this->log("/".$module->name, "", $indent + 1);
                     }
+
                     if(isset($tree->tree)) {
                         foreach($tree->tree as $item) {
                             if(($module->path == "" || $module->path == "/" || strpos($item->path, $module->path) === 0) && $item->path !== $module->path) {
@@ -172,20 +182,26 @@
                         $set->ignoreIfAvailable = true;
                     }
 
-                    if($set->ignoreIfAvailable && file_exists($installInDir."/".$set->name)) {
+                    if($set->ignoreIfAvailable && file_exists($installInDir."/".$set->name) && $this->updateMode === false) {
                         $this->log("/".$set->name." already installed", "", $indent + 1);
                         $this->actionsAfter($set, $installInDir."/".$set->name, $indent);
                         return;
                     }
 
-                    if(file_exists($installInDir."/".$set->name)) {
-                        $this->rmdir_recursive($installInDir."/".$set->name);
-                    }
-                    if(mkdir($installInDir."/".$set->name, 0777)) {
-                        $this->log("/".$set->name, "", $indent + 1);
+                    // if(file_exists($installInDir."/".$set->name)) {
+                    //     $this->rmdir_recursive($installInDir."/".$set->name);
+                    // }
+
+                    if(!file_exists($installInDir."/".$set->name)) {
+                        if(mkdir($installInDir."/".$set->name, 0777)) {
+                            $this->log("/".$set->name, "", $indent + 1);
+                        } else {
+                            $this->error("/".$set->name." directory is not created", "", $indent + 1);
+                        }
                     } else {
-                        $this->error("/".$set->name." directory is no created", "", $indent + 1);
+                        $this->log("/".$set->name, "", $indent + 1);
                     }
+
                     $content = $this->request($set->path, false);
                     $fileToBeSaved = $installInDir."/".$set->name."/".basename($set->path);
                     if(file_put_contents($fileToBeSaved, $content) !== false) {
@@ -294,6 +310,12 @@
                     } else {
                         $this->error("Invalid path to package.json file.");
                         die();
+                    }
+                }
+                private function checkForUpdateMode() {
+                    global $argv;
+                    if(isset($argv[2]) && $argv[2] === "update") {
+                        $this->updateMode = true;
                     }
                 }
                 private function validateSets($sets, $packageFile) {

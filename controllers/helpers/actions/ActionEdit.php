@@ -13,7 +13,7 @@
             $record = $this->mysql->{$this->resource->name}->where("id=".$this->id)->get();
             $record = $record[0];
             foreach($this->resource->data as $item) {
-                if($item->presenter == "File") {
+                if($item->presenter == "File" || $item->presenter == "Image") {
                    $record->{$item->name."_hidden"} = $record->{$item->name};
                 }
                 if($item->presenter == "Check") {
