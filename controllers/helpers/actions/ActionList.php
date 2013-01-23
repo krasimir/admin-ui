@@ -14,7 +14,7 @@
         public function run() {
 
             // getting the records and prepare the html markup
-            $records = $this->mysql->{$this->resource->name}->order("position")->asc()->limit($this->pagination->from.",".$this->pagination->to)->get();
+            $records = $this->mysql->{$this->resource->name}->order("position")->desc()->limit($this->pagination->from.",".$this->pagination->to)->get();
             $recordsMarkup = '';
             $headersMarkup = '';
             $skipColumns = $this->getColumnsForSkipping();
