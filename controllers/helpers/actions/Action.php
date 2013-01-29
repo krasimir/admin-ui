@@ -54,7 +54,7 @@
             foreach ($data as $key => $value) {
                 if(is_array($value) && isset($value["name"]) && $value["name"] != "") {
                     $dir = uniqid();
-                    $outputDir = __DIR__."/../../../".FILES_DIR.$dir."/";
+                    $outputDir = dirname(__FILE__)."/../../../".FILES_DIR.$dir."/";
                     mkdir($outputDir);
                     if(move_uploaded_file($value["tmp_name"], $outputDir.$value["name"])) {
                         if($this->getResourceItemByName($key)->presenter == "Image") {   

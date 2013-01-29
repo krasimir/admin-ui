@@ -2,7 +2,7 @@
 
     session_start();
 
-    require(__DIR__."/modules/Autoloader/Autoloader.php");
+    require(dirname(__FILE__)."/modules/Autoloader/Autoloader.php");
 
     // modules + resources
     global $F;
@@ -21,7 +21,7 @@
     );
 
     // configuration of the template engine and Former
-    View::$root = __DIR__."/tpl/";
+    View::$root = dirname(__FILE__)."/tpl/";
     View::$forEachView = array(
         "siteURL" => ADMINUI_URL
     );

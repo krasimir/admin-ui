@@ -6,7 +6,7 @@
     define("DBNAME", "krasimir_adminui");
     define("ADMINUI_URL", "http://admin-ui.dev/");
     define("FILES_DIR", "files/");
-    define("RESOURCE_DIR", __DIR__."/../resources/");
+    define("RESOURCE_DIR", dirname(__FILE__)."/../resources/");
 
     global $USERS;
     $USERS = array(
